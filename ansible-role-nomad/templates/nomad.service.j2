@@ -1,0 +1,17 @@
+[Unit]
+Description=Nomad Service
+After=network.target
+
+[Service]
+Type=simple
+User={{ nomad_user }}
+{% if nomad_client and not nomad_server %}
+ExecStart={{ nomad_install_dir }}/nomad agent -config {{ nomad_config_dir }}/base.hcl -config {{ nomad_config_dir }}/client.hcl > {{ nomad_log_file }} 2>&1
+{% endif %}
+{% if nomad_server and not nomad_client %}
+ExecStart={{ nomad_install_dir }}/nomad agent -config {{ nomad_config_dir }}/base.hcl -config {{ nomad_config_dir }}/server.hcl > {{ nomad_log_file }} 2>&1
+{% endif %}
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
