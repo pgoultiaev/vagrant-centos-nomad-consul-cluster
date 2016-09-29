@@ -25,25 +25,27 @@ Vagrant.configure(2) do |config|
     end
   end
 
-  config.vm.define "nomad-client" do |nomadclient|
-    nomadclient.vm.box = "centos/7"
-    nomadclient.vm.network "private_network", ip: "192.168.11.11"
+  4.upto(6) do |i|
+    config.vm.define "nomad#{i}" do |nomadclient|
+      nomadclient.vm.box = "centos/7"
+      nomadclient.vm.network "private_network", ip: "192.168.10.1#{i}"
 
-    nomadclient.vm.provider "virtualbox" do |vb|
-      vb.memory = 2048
-      vb.cpus = 2
-    end
+      nomadclient.vm.provider "virtualbox" do |vb|
+        vb.memory = 2048
+        vb.cpus = 2
+      end
 
-    nomadclient.vm.provision :ansible do |ansible|
-      ansible.verbose = "v"
-      ansible.playbook = "nomad.yml"
-      ansible.extra_vars = {
-        current_ip: "192.168.11.11",
-        nomad_client: true,
-        nomad_server: false,
-        nomad_node_name: "nomad",
-        consul_node_name: "consul-4",
-      }
+      nomadclient.vm.provision :ansible do |ansible|
+        ansible.verbose = "v"
+        ansible.playbook = "nomad.yml"
+        ansible.extra_vars = {
+          current_ip: "192.168.10.1#{i}",
+          nomad_client: true,
+          nomad_server: false,
+          nomad_node_name: "nomad-#{i}",
+          consul_node_name: "consul-#{i}",
+        }
+      end
     end
   end
 end
