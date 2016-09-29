@@ -13,8 +13,6 @@ Vagrant.configure(2) do |config|
         vb.cpus = 2
       end
 
-      nomad.vm.synced_folder ".", "/vagrant"
-
       nomad.vm.provision :ansible do |ansible|
         ansible.verbose = "v"
         ansible.playbook = "nomad.yml"
@@ -24,6 +22,28 @@ Vagrant.configure(2) do |config|
           consul_node_name: "consul-#{i}",
         }
       end
+    end
+  end
+
+  config.vm.define "nomad-client" do |nomadclient|
+    nomadclient.vm.box = "centos/7"
+    nomadclient.vm.network "private_network", ip: "192.168.11.11"
+
+    nomadclient.vm.provider "virtualbox" do |vb|
+      vb.memory = 2048
+      vb.cpus = 2
+    end
+
+    nomadclient.vm.provision :ansible do |ansible|
+      ansible.verbose = "v"
+      ansible.playbook = "nomad.yml"
+      ansible.extra_vars = {
+        current_ip: "192.168.11.11",
+        nomad_client: true,
+        nomad_server: false,
+        nomad_node_name: "nomad",
+        consul_node_name: "consul-4",
+      }
     end
   end
 end

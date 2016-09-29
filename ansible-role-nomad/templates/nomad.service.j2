@@ -6,10 +6,10 @@ After=network.target
 Type=simple
 User={{ nomad_user }}
 {% if nomad_client and not nomad_server %}
-ExecStart={{ nomad_install_dir }}/nomad agent -config {{ nomad_config_dir }}/base.hcl -config {{ nomad_config_dir }}/client.hcl > {{ nomad_log_file }} 2>&1
+ExecStart={{ nomad_install_dir }}/nomad agent -config {{ nomad_config_dir }}/base.hcl -config {{ nomad_config_dir }}/client.hcl
 {% endif %}
 {% if nomad_server and not nomad_client %}
-ExecStart={{ nomad_install_dir }}/nomad agent -config {{ nomad_config_dir }}/base.hcl -config {{ nomad_config_dir }}/server.hcl > {{ nomad_log_file }} 2>&1
+ExecStart={{ nomad_install_dir }}/nomad agent -config {{ nomad_config_dir }}/base.hcl -config {{ nomad_config_dir }}/server.hcl
 {% endif %}
 Restart=on-abort
 

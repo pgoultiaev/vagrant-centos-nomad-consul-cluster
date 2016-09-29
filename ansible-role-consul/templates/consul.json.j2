@@ -1,5 +1,7 @@
 {
+    {% if current_ip is equalto "192.168.11.11" %}
     "bootstrap": true,
+    {% endif %}
     "server": true,
     "node_name": "{{ consul_node_name }}",
     "datacenter": "europe",
@@ -9,5 +11,5 @@
     "addresses": {
         "http": "0.0.0.0"
     },
-    "retry_join": ["192.168.10.11", "192.168.10.12", "192.168.10.13"]
+    "retry_join": ["192.168.10.11", "192.168.10.12", "192.168.10.13", "192.168.11.11"]
 }

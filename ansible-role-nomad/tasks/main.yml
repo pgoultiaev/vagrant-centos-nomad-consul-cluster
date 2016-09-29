@@ -1,8 +1,21 @@
 ---
 
+# Docker
+- name: Add docker yum repo
+  template: >
+    src=docker.repo
+    dest=/etc/yum.repos.d/docker.repo
+
+- name: Ensure docker is installed
+  yum: name=docker-engine state=installed
+
+- name: Ensure Docker service is started and enabled on boot
+  service: name=docker state=started enabled=yes
+
+# Nomad
+
 - name: Create Nomad group
   group: name={{ nomad_group }} system=yes state=present
-  when: nomad_server
 
 - name: Create Nomad user
   user: >
@@ -10,9 +23,9 @@
     shell=/bin/false
     createhome=no
     group={{ nomad_group }}
+    groups=docker
     system=yes
     state=present
-  when: nomad_server
 
 - name: Download Nomad
   get_url: >
@@ -47,8 +60,8 @@
   template: >
     src=nomad.service.j2
     dest=/etc/systemd/system/nomad.service
-    owner=root
-    group=root
+    owner={{ nomad_user }}
+    group={{ nomad_group }}
     mode=0644
   notify: restart nomad
 
