@@ -19,7 +19,7 @@
     url={{ nomad_url }}
     dest={{ nomad_download_dir }}/nomad.zip
 
-- name: Install unzip
+- name: Ensure unzip is installed
   yum: name=unzip state=installed
 
 - name: Unzip Nomad to installation directory

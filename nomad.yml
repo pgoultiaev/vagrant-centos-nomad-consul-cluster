@@ -2,3 +2,4 @@
   become: yes
   roles:
     - ansible-role-nomad
+    - ansible-role-consul

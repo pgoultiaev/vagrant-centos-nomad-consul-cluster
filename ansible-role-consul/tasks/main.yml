@@ -1,0 +1,59 @@
+---
+
+- name: Create Consul group
+  group: name={{ consul_group }} system=yes state=present
+
+- name: Create Consul user
+  user: >
+    name={{ consul_user }}
+    shell=/bin/false
+    createhome=no
+    group={{ consul_group }}
+    system=yes
+    state=present
+
+- name: Download Consul
+  get_url: >
+    url={{ consul_url }}
+    dest={{ consul_download_dir }}/consul.zip
+
+- name: Ensure unzip is installed
+  yum: name=unzip state=installed
+
+- name: Unzip Consul to installation directory
+  command: unzip {{ consul_download_dir }}/consul.zip -d {{ consul_install_dir }}
+  args:
+    creates: "{{ consul_install_dir }}/consul"
+  tags: consul
+
+- name: Create Consul configuration directory
+  file: >
+    path={{ consul_config_dir }}
+    owner={{ consul_user }}
+    group={{ consul_group }}
+    mode=0755
+    state=directory
+
+- name: Create Consul upstart configuration
+  template: >
+    src=consul.service.j2
+    dest=/etc/systemd/system/consul.service
+    owner={{ consul_user }}
+    group={{ consul_group }}
+    mode=0644
+  notify: restart consul
+
+- name: Create Consul configuration file
+  template: >
+    src=consul.json.j2
+    dest={{ consul_config_dir }}/consul.json
+    owner={{ consul_user }}
+    group={{ consul_group }}
+    mode=0644
+  notify: restart consul
+
+- include: webui.yml
+  when: consul_webui
+
+- name: Ensure Consul service is started and enabled on boot
+  service: name={{ consul_service_name }} state=started enabled=yes

@@ -20,7 +20,8 @@ Vagrant.configure(2) do |config|
         ansible.playbook = "nomad.yml"
         ansible.extra_vars = {
           current_ip: "192.168.10.1#{i}",
-          nomad_node_name: "nomad-#{i}"
+          nomad_node_name: "nomad-#{i}",
+          consul_node_name: "consul-#{i}",
         }
       end
     end
