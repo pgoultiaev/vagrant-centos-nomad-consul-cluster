@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User={{ consul_user }}
-ExecStart={{ consul_install_dir }}/consul agent -config-dir={{ consul_config_dir }}
+ExecStart={{ consul_install_dir }}/consul agent -config-dir={{ consul_config_dir }} -ui
 Restart=on-abort
 
 [Install]

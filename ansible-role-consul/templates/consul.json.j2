@@ -4,8 +4,10 @@
     "node_name": "{{ consul_node_name }}",
     "datacenter": "europe",
     "data_dir": "{{ consul_data_dir }}",
-    "ui_dir": "{{ consul_ui_dir }}",
     "bind_addr":"0.0.0.0",
     "advertise_addr": "{{ current_ip }}",
+    "addresses": {
+        "http": "0.0.0.0"
+    },
     "retry_join": ["192.168.10.11", "192.168.10.12", "192.168.10.13"]
 }
