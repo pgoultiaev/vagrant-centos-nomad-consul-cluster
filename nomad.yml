@@ -3,3 +3,4 @@
   roles:
     - ansible-role-consul
     - ansible-role-nomad
+    - ansible-role-dnsmasq

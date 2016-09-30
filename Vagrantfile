@@ -9,8 +9,8 @@ Vagrant.configure(2) do |config|
       nomad.vm.network "private_network", ip: "192.168.10.1#{i}"
 
       nomad.vm.provider "virtualbox" do |vb|
-        vb.memory = 2048
-        vb.cpus = 2
+        vb.memory = 1024
+        vb.cpus = 1
       end
 
       nomad.vm.provision :ansible do |ansible|
