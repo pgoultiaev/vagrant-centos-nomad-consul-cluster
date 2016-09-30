@@ -37,7 +37,7 @@ job "jenkins-master" {
         port = "http"
 
         check {
-          name     = "alive"
+          name     = "jenkins-master alive"
           type     = "tcp"
           interval = "10s"
           timeout  = "2s"

@@ -60,8 +60,8 @@
   template: >
     src=nomad.service.j2
     dest=/etc/systemd/system/nomad.service
-    owner={{ nomad_user }}
-    group={{ nomad_group }}
+    owner=root
+    group=root
     mode=0644
   notify: restart nomad
 

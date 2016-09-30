@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-User={{ nomad_user }}
+User=root
 {% if nomad_client and not nomad_server %}
 ExecStart={{ nomad_install_dir }}/nomad agent -config {{ nomad_config_dir }}/base.hcl -config {{ nomad_config_dir }}/client.hcl
 {% endif %}
