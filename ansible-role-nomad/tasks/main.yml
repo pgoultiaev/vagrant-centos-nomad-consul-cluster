@@ -1,6 +1,12 @@
 ---
 
 # Set up docker to use as drive for nomad
+
+- name: Make sure docker yum repo does not exist
+  file: >
+    state=absent
+    path=/etc/yum.repos.d/docker.repo
+
 - name: Add docker yum repo
   template: >
     src=docker.repo
@@ -8,6 +14,11 @@
 
 - name: Ensure docker is installed
   yum: name=docker-engine state=installed
+
+- name: Make sure docker.service does not exist
+  file: >
+    state=absent
+    path=/etc/systemd/system/docker.service
 
 # Customize docker setup because default devmapper storage backend has issues with centos
 # see http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/
@@ -69,7 +80,12 @@
     mode=0755
     state=directory
 
-- name: Create Nomad upstart configuration
+- name: Make sure nomad.service does not exist
+  file: >
+    state=absent
+    path=/etc/systemd/system/nomad.service
+
+- name: Create nomad.service configuration
   template: >
     src=nomad.service.j2
     dest=/etc/systemd/system/nomad.service

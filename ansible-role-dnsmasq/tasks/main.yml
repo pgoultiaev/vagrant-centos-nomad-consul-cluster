@@ -6,6 +6,15 @@
 - name: Ensure dnsmasq is enabled at boot
   service: name=dnsmasq enabled=yes
 
+- name: Make sure dnsmasq config does not exist before installing
+  file: >
+    state=absent
+    path={{ item }}
+  with_items:
+    - /etc/dnsmasq.conf
+    - /etc/resolv.conf.dnsmasq
+    - /etc/resolv.conf
+
 - name: Create dnsmasq configuration file
   template: >
     src=dnsmasq.conf.j2

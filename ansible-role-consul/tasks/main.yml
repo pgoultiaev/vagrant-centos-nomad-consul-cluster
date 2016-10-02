@@ -42,12 +42,18 @@
     mode=0755
     state=directory
 
-- name: Create Consul upstart configuration
+# See https://github.com/ansible/ansible/issues/13652
+- name: If consul.service configuration already exists, remove it
+  file: >
+    state=absent
+    path=/etc/systemd/system/consul.service
+
+- name: Create consul.service configuration
   template: >
     src=consul.service.j2
     dest=/etc/systemd/system/consul.service
-    owner={{ consul_user }}
-    group={{ consul_group }}
+    owner=root
+    group=root
     mode=0644
   notify: restart consul
 
