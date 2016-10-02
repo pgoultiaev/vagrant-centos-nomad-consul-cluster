@@ -1,6 +1,6 @@
 ---
 
-# Docker
+# Set up docker to use as drive for nomad
 - name: Add docker yum repo
   template: >
     src=docker.repo
@@ -8,6 +8,19 @@
 
 - name: Ensure docker is installed
   yum: name=docker-engine state=installed
+
+# Customize docker setup because default devmapper storage backend has issues with centos
+# see http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/
+# By default, the yum docker-engine does not pick up any conf files so I decided to overwrite the
+# provided docker.service file
+- name: Create docker options
+  template: >
+    src=docker.service.j2
+    dest=/etc/systemd/system/docker.service
+    owner=root
+    group=root
+    mode=0644
+  notify: restart docker
 
 - name: Ensure Docker service is started and enabled on boot
   service: name=docker state=started enabled=yes

@@ -12,13 +12,21 @@
     system=yes
     state=present
 
+- name: Ensure unzip is installed (required by unarchive module)
+  yum: name=unzip state=installed
+
+# This only works in ansible 2.2
+# - name: download consul zip
+#   unarchive: >
+#     src="{{ consul_url }}"
+#     creates="{{ consul_install_dir }}/consul"
+#     dest="{{ consul_install_dir }}"
+#     remote_src=yes
+
 - name: Download Consul
   get_url: >
     url={{ consul_url }}
     dest={{ consul_download_dir }}/consul.zip
-
-- name: Ensure unzip is installed
-  yum: name=unzip state=installed
 
 - name: Unzip Consul to installation directory
   command: unzip {{ consul_download_dir }}/consul.zip -d {{ consul_install_dir }}
@@ -51,9 +59,6 @@
     group={{ consul_group }}
     mode=0644
   notify: restart consul
-
-- include: webui.yml
-  when: consul_webui
 
 - name: Ensure Consul service is started and enabled on boot
   service: name={{ consul_service_name }} state=started enabled=yes

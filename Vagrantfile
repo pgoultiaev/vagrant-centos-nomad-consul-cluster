@@ -35,6 +35,8 @@ Vagrant.configure(2) do |config|
         vb.cpus = 2
       end
 
+      nomadclient.vm.synced_folder ".", "/vagrant"
+
       nomadclient.vm.provision :ansible do |ansible|
         ansible.verbose = "v"
         ansible.playbook = "nomad.yml"
