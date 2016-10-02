@@ -23,10 +23,10 @@ advertise {
 
 # Ship metrics to monitor the health of the cluster and to see task resource
 # usage.
-#telemetry {
-#    statsite_address = "${var.statsite}"
-#    disable_hostname = true
-#}
+telemetry {
+    statsite_address = "http://statsd-exporter.service.consul:9125"
+    disable_hostname = true
+}
 
 # Enable debug endpoints.
 enable_debug = true
