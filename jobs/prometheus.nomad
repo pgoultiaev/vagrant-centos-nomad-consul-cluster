@@ -1,14 +1,14 @@
-job "stats" {
+job "prometheus" {
 	region = "global"
 	datacenters = ["dc1"]
-	type = "system"
+	type = "service"
 
 	update {
 		stagger = "10s"
 		max_parallel = 1
 	}
 
-	group "stats" {
+	group "prometheus" {
 		restart {
 			attempts = 6
 			interval = "1m"
@@ -16,21 +16,20 @@ job "stats" {
 			mode = "delay"
 		}
 
-		task "statsd-exporter" {
+		task "prometheus" {
 			driver = "docker"
 
 			config {
-				image = "prom/statsd-exporter:0.3.0"
+				image = "pgoultiaev/prometheus:0.1"
 				port_map {
-					incoming = 9125
-					outgoing = 9102
+					http = 9090
 				}
 			}
 
 			service {
-				name = "statsd-exporter"
-				tags = ["stats"]
-				port = "outgoing"
+				name = "prometheus"
+				tags = ["prometheus"]
+				port = "http"
 				check {
 					name = "alive"
 					type = "tcp"
@@ -40,16 +39,13 @@ job "stats" {
 			}
 
 			resources {
-				cpu = 256
-				memory = 128
+				cpu = 500
+				memory = 256
 				network {
 					mbits = 1
-					port "incoming" {
-						static = 9125
-					}
-					port "outgoing" {
-						static = 9102
-					}
+					port "http" {
+            static = 9090
+          }
 				}
 			}
 		}
