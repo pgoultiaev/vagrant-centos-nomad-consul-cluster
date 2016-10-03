@@ -1,4 +1,4 @@
-job "stats" {
+job "statsd" {
 	region = "global"
 	datacenters = ["dc1"]
 	type = "system"
@@ -16,23 +16,22 @@ job "stats" {
 			mode = "delay"
 		}
 
-		task "statsd-exporter" {
+		task "statsd" {
 			driver = "docker"
 
 			config {
-				image = "prom/statsd-exporter:0.3.0"
+				image = "pgoultiaev/telegraf:0.13-alpine"
 				port_map {
-					incoming = 9125
-					outgoing = 9102
+					incoming = 8125
 				}
 			}
 
 			service {
-				name = "statsd-exporter"
-				tags = ["stats"]
+				name = "statsd"
+				tags = ["statsd"]
 				port = "outgoing"
 				check {
-					name = "alive"
+					name = "statsd incoming port"
 					type = "tcp"
 					interval = "10s"
 					timeout = "2s"
@@ -45,10 +44,7 @@ job "stats" {
 				network {
 					mbits = 1
 					port "incoming" {
-						static = 9125
-					}
-					port "outgoing" {
-						static = 9102
+						static = 8125
 					}
 				}
 			}
