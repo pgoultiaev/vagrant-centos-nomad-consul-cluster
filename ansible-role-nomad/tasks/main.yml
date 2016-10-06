@@ -20,6 +20,20 @@
     state=absent
     path=/etc/systemd/system/docker.service
 
+- name: Make sure docker.service does not exist
+  file: >
+    state=absent
+    path=/etc/default/docker
+
+- name: Create default docker daemon options
+  template: >
+    src=docker_daemon_config.j2
+    dest=/etc/default/docker
+    owner=root
+    group=root
+    mode=0644
+  notify: restart docker
+
 # Customize docker setup because default devmapper storage backend has issues with centos
 # see http://www.projectatomic.io/blog/2015/06/notes-on-fedora-centos-and-docker-storage-drivers/
 # By default, the yum docker-engine does not pick up any conf files so I decided to overwrite the
