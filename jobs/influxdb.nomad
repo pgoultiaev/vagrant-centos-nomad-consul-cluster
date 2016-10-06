@@ -1,14 +1,16 @@
-job "statsd" {
+job "influxdb" {
 	region = "global"
 	datacenters = ["dc1"]
-	type = "system"
+	type = "service"
 
 	update {
 		stagger = "10s"
 		max_parallel = 1
 	}
 
-	group "stats" {
+	group "influxdb" {
+		count = 1
+
 		restart {
 			attempts = 6
 			interval = "1m"
@@ -16,22 +18,23 @@ job "statsd" {
 			mode = "delay"
 		}
 
-		task "statsd" {
+		task "influxdb" {
 			driver = "docker"
 
 			config {
-				image = "pgoultiaev/telegraf:0.13-alpine"
+				image = "influxdb"
 				port_map {
-					incoming = 8125
+					http = 8086
+					httpadmin = 8083
 				}
 			}
 
 			service {
-				name = "statsd"
-				tags = ["statsd"]
-				port = "outgoing"
+				name = "influxdb"
+				tags = ["influxdb"]
+				port = "http"
 				check {
-					name = "statsd incoming port"
+					name = "influxdb alive"
 					type = "tcp"
 					interval = "10s"
 					timeout = "2s"
@@ -39,12 +42,15 @@ job "statsd" {
 			}
 
 			resources {
-				cpu = 256
-				memory = 128
+				cpu = 500
+				memory = 256
 				network {
 					mbits = 1
-					port "incoming" {
-						static = 8125
+					port "http" {
+						static = 8086
+					}
+					port "httpadmin" {
+						static = 8083
 					}
 				}
 			}
