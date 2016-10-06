@@ -35,3 +35,6 @@
     dest=/etc/resolv.conf
     mode=0644
   notify: restart dnsmasq
+
+- name: Make sure dnsmasq is started
+  service: name=dnsmasq state=started
