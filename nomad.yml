@@ -4,3 +4,4 @@
     - ansible-role-consul
     - ansible-role-nomad
     - ansible-role-dnsmasq
+    - ansible-role-telegraf
