@@ -1,5 +1,5 @@
 listen-address=127.0.0.1
-listen-address={{ current_ip }}
+listen-address={{ ansible_eth1.ipv4.address }}
 bind-interfaces
 port=53
 domain-needed
