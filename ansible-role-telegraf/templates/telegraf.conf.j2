@@ -1,5 +1,6 @@
 [agent]
-interval = "10s"
+  interval = "10s"
+  hostname = "{{ inventory_hostname }}"
 
 # Statsd Server
 [[inputs.statsd]]

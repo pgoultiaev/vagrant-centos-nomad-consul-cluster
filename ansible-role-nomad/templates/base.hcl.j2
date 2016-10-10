@@ -5,6 +5,10 @@ name = "{{ inventory_hostname }}"
 
 log_level = "DEBUG"
 
+# Make sure Nomad nodes leave before shutting down the agent to prevent messing up the raft consensus
+leave_on_interrupt = true
+leave_on_terminate = true
+
 # Persist data to a location that will survive a machine reboot.
 data_dir = "{{ nomad_data_dir }}"
 

@@ -1,5 +1,5 @@
 {
-    {% if ansible_eth1.ipv4.address is equalto "192.168.10.11" %}
+    {% if consul_bootstrap is defined %}
     "bootstrap": true,
     {% endif %}
     "server": true,
@@ -14,5 +14,9 @@
     "telemetry": {
         "statsd_address": "127.0.0.1:8125"
     },
-    "retry_join": ["192.168.10.11", "192.168.10.12", "192.168.10.13", "192.168.10.14", "192.168.10.15", "192.168.10.16"]
+    "retry_join":[
+    {% set comma = joiner(", ") %}
+    {% for host in groups['server'] %}
+        {{ comma() }}"{{ hostvars[host]["ansible_ssh_host"] }}"
+    {% endfor %}]
 }
