@@ -15,15 +15,22 @@
 - name: Download Nomad
   get_url: >
     url={{ nomad_url }}
-    dest={{ nomad_download_dir }}/nomad.zip
+    dest={{ nomad_download_dir }}/nomad{{ nomad_version }}.zip
+    sha256sum={{ nomad_sha256sum }}
 
 - name: Ensure unzip is installed
   yum: name=unzip state=installed
 
 - name: Unzip Nomad to installation directory
-  command: unzip {{ nomad_download_dir }}/nomad.zip -d {{ nomad_install_dir }}
+  command: unzip -o {{ nomad_download_dir }}/nomad{{ nomad_version }}.zip -d {{ nomad_install_dir }}
   args:
-    creates: "{{ nomad_install_dir }}/nomad"
+    creates: "{{ nomad_install_dir }}/nomad{{ nomad_version }}"
+
+- name: Set nomad to link to installed version
+  file: >
+    src="{{ nomad_install_dir }}/nomad"
+    dest="{{ nomad_install_dir }}/nomad{{ nomad_version }}"
+    state=link
 
 - name: Create Nomad configuration directory
   file: >
