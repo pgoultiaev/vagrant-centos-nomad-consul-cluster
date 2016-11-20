@@ -5,3 +5,4 @@
     - ansible-role-nomad
     - ansible-role-dnsmasq
     - ansible-role-telegraf
+    - ansible-role-docker

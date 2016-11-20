@@ -6,7 +6,3 @@
 
 - name: reload nomad
   service: name={{ nomad_service_name }} state=reloaded
-
-
-- name: restart docker
-  service: name=docker state=restarted
